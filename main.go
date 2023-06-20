@@ -35,6 +35,7 @@ func main() {
 	})
 
 	public.POST("/email", controllers.CreateEmail)
+	public.POST("/increment", controllers.IncrementTime)
 
 	err = r.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
 	if err != nil {

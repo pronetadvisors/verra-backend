@@ -26,11 +26,36 @@ func CreateEmail(c *gin.Context) {
 	}
 
 	email := models.Email{
-		Email:     input.Email,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Email:      input.Email,
+		TimeViewed: 0,
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
 	}
 	_, err := email.CreateEmail()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"email": email})
+}
+
+func IncrementTime(c *gin.Context) {
+	var email models.Email
+
+	if err := c.ShouldBindJSON(&email); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	e, err := models.GetEmailByEmail(email.Email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	e.TimeViewed += 5
+	_, err = e.UpdateEmail()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
