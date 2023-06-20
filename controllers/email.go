@@ -40,6 +40,18 @@ func CreateEmail(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"email": email})
 }
 
+func GetEmails(c *gin.Context) {
+	var email models.Email
+
+	emails, err := email.GetEmails()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"emails": emails})
+}
+
 func IncrementTime(c *gin.Context) {
 	var email models.Email
 
